@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wdnm:Diagram xmlns:wdnm="http://workday.com/studio/editors/notation">
+  <element href="assembly.xml#WorkdayAssembly"/>
+  <visualProperties x="19" y="108">
+    <element href="assembly.xml#StartHere"/>
+  </visualProperties>
+  <visualProperties x="215" y="108">
+    <element href="assembly.xml#CreateRequest"/>
+  </visualProperties>
+  <visualProperties x="456" y="108">
+    <element href="assembly.xml#HttpOut"/>
+  </visualProperties>
+  <visualProperties x="424" y="223">
+    <element href="assembly.xml#CallSplitOutput"/>
+  </visualProperties>
+  <visualProperties x="48" y="408">
+    <element href="assembly.xml#SplitOutput"/>
+  </visualProperties>
+  <visualProperties x="210" y="408">
+    <element href="assembly.xml#PrepareSplit"/>
+  </visualProperties>
+  <visualProperties x="385" y="408">
+    <element href="assembly.xml#SplitReportOutput"/>
+  </visualProperties>
+  <visualProperties x="637" y="408">
+    <element href="assembly.xml#PopulateMap"/>
+  </visualProperties>
+  <decorations x="215" y="29" width="100" height="60" type="TEXT" text=""/>
+  <decorations x="314" y="-13" width="473" height="89" text="Construct your SOAP request based on the sample generated from the imported WSDL. Use the integration properties 'wss.usernametoken.username' and 'wss.usernametoken.password' in the authentication header."/>
+  <decorations x="48" y="-6" width="201" height="70" text="Create a report service and add a reference to your report."/>
+  <decorations x="618" y="113" width="199" height="90" text="Refer to your report using the alias you created in the report service. Use the HTTP 'POST' method."/>
+  <decorations x="240" y="302" width="299" height="92" text="You can use a Validate step to check for SOAP faults or empty results. A copy step can optionally be used to discard the SOAP envelope as well."/>
+  <decorations x="19" y="-83" width="612" height="58" font="Arial|16|1" fontColor="1" type="TEXT" text="Sample: Workday Reports via SOAP"/>
+  <decorations x="186" y="586" width="158" height="89" text="Create a HashMap to hold your report results at a per-row level."/>
+  <decorations x="467" y="602" width="215" height="142" text="Split your report results at the row level. Note that your results will use the namespace prefix you specifiec in the advanced tab on the report, so you may want to add it to the asembly as a namespace prefix."/>
+  <decorations x="700" y="602" width="213" height="85" text="Iterate through the results, adding each row to the map. Choose a unique identifier such as employee ID to use as the map key value."/>
+  <connections type="routesTo" sourceAnchorX="0.6697247706422018" sourceAnchorY="1.0" targetAnchorX="0.40476190476190477" targetAnchorY="0.04666666666666667">
+    <source href="assembly.xml#StartHere"/>
+    <target href="assembly.xml#CreateRequest"/>
+  </connections>
+  <connections type="routesTo" sourceAnchorX="1.0" sourceAnchorY="0.13333333333333333" targetAnchorX="0.3163265306122449" targetAnchorY="0.4594594594594595">
+    <source href="assembly.xml#CreateRequest"/>
+    <target href="assembly.xml#HttpOut"/>
+  </connections>
+  <connections target="//@decorations.1" type="Notation" sourceAnchorX="0.5743243243243243" sourceAnchorY="0.13157894736842105" targetAnchorX="0.11839323467230443" targetAnchorY="0.8571428571428571">
+    <source href="assembly.xml#CreateRequest"/>
+  </connections>
+  <connections target="//@decorations.2" type="Notation" sourceAnchorX="0.44036697247706424" sourceAnchorY="0.32432432432432434" targetAnchorX="0.2835820895522388" targetAnchorY="0.75">
+    <source href="assembly.xml#StartHere"/>
+  </connections>
+  <connections target="//@decorations.3" type="Notation" sourceAnchorX="0.5816326530612245" sourceAnchorY="0.3783783783783784" targetAnchorX="0.04522613065326633" targetAnchorY="0.45121951219512196">
+    <source href="assembly.xml#HttpOut"/>
+  </connections>
+  <connections target="//@decorations.4" type="Notation" sourceAnchorX="0.4391891891891892" sourceAnchorY="0.881578947368421" targetAnchorX="0.39464882943143814" targetAnchorY="0.21875">
+    <source href="assembly.xml#CreateRequest"/>
+  </connections>
+  <connections type="routesTo" sourceAnchorX="0.7008547008547008" sourceAnchorY="1.0" targetAnchorX="0.35454545454545455" targetAnchorY="0.2826086956521739">
+    <source href="assembly.xml#SplitOutput"/>
+    <target href="assembly.xml#PrepareSplit"/>
+  </connections>
+  <connections type="routesTo" sourceAnchorX="0.0" sourceAnchorY="0.18085106382978725" targetAnchorX="0.31654676258992803" targetAnchorY="0.11688311688311688">
+    <source href="assembly.xml#PrepareSplit"/>
+    <target href="assembly.xml#SplitReportOutput"/>
+  </connections>
+  <connections type="routesTo" sourceAnchorX="0.4365079365079365" sourceAnchorY="1.0" targetAnchorX="0.32456140350877194" targetAnchorY="0.19148936170212766">
+    <source href="assembly.xml#//@beans/@mixed.1/@splitter.0/@subRoute.0"/>
+    <target href="assembly.xml#PopulateMap"/>
+  </connections>
+  <connections type="routesResponseTo" sourceAnchorX="1.0" sourceAnchorY="0.1513157894736842" targetAnchorX="0.17985611510791366" targetAnchorY="0.08108108108108109">
+    <source href="assembly.xml#CreateRequest"/>
+    <target href="assembly.xml#CallSplitOutput"/>
+  </connections>
+  <connections target="//@decorations.6" type="Notation" sourceAnchorX="0.2909090909090909" sourceAnchorY="0.7553191489361702" targetAnchorX="0.1962025316455696" targetAnchorY="0.3076923076923077">
+    <source href="assembly.xml#PrepareSplit"/>
+  </connections>
+  <connections target="//@decorations.7" type="Notation" sourceAnchorX="0.7841726618705036" sourceAnchorY="0.9545454545454546" targetAnchorX="0.4186046511627907" targetAnchorY="0.1891891891891892">
+    <source href="assembly.xml#SplitReportOutput"/>
+  </connections>
+  <connections target="//@decorations.8" type="Notation" sourceAnchorX="0.5526315789473685" sourceAnchorY="0.7659574468085106" targetAnchorX="0.4788732394366197" targetAnchorY="0.3411764705882353">
+    <source href="assembly.xml#PopulateMap"/>
+  </connections>
+</wdnm:Diagram>

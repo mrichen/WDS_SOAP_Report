@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+     xmlns="http://www.springframework.org/schema/beans"
+     xmlns:beans="http://www.springframework.org/schema/beans"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:cc="http://www.capeclear.com/assembly/10"
+     xmlns:cloud="urn:com.workday/esb/cloud/10.0"
+     xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"
+     xmlns:pi="urn:com.workday/picof"
+     xmlns:wd="urn:com.workday/bsvc"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ 
+	<cc:assembly id="WorkdayAssembly" version="20">
+        <cc:workday-in id="StartHere" routes-to="CreateRequest">
+            <cc:integration-system name="WD_Soap_Demo">
+        <cloud:report-service name="wdreport">
+          <cloud:report-alias name="worker_report"/>
+        </cloud:report-service>
+      </cc:integration-system>
+        </cc:workday-in>
+        <cc:sync-mediation id="CreateRequest" routes-to="HttpOut" handle-downstream-errors="true" routes-response-to="CallSplitOutput">
+            <cc:request-steps>
+                <cc:eval id="Eval"><cc:expression>props['sample_worker'] = '0001313'</cc:expression></cc:eval>
+                <cc:xslt id="Xslt" url="SOAPRequest.xsl"/>
+            </cc:request-steps>
+            <cc:response-steps>
+                <cc:copy id="Copy" input="soapbody"/>
+                <cc:validate-exp id="ValidateExp"><cc:expression error-number="01" failure-message="A SOAP Fault was returned by the report. Please review the logs for more information.">parts[0].xpath('SOAP-ENV:Envelope/SOAP-ENV:Body/SOAP-ENV:Fault', 'SOAP-ENV http://schemas.xmlsoap.org/soap/envelope/') == ''</cc:expression></cc:validate-exp>
+            </cc:response-steps>
+        </cc:sync-mediation>
+        <cc:http-out id="HttpOut" endpoint="@{intsys.reportService.getEndpoint('worker_report')}" http-method="POST"/>
+        <cc:local-out id="CallSplitOutput" store-message="none" endpoint="vm://WD_Soap_Demo/SplitOutput"/>
+        <cc:local-in id="SplitOutput" routes-to="PrepareSplit"/>
+        <cc:async-mediation id="PrepareSplit" routes-to="SplitReportOutput">
+            <cc:steps>
+                <cc:eval id="Eval"><cc:expression>props['report.hash.map'] = new java.util.HashMap()</cc:expression></cc:eval>
+            </cc:steps>
+        </cc:async-mediation>
+        <cc:splitter id="SplitReportOutput">
+            <cc:sub-route name="PopulateMap" routes-to="PopulateMap"/>
+            <cc:xml-stream-splitter xpath="/rp:Report_Data/rp:Report_Entry"/>
+        </cc:splitter>
+        <cc:async-mediation id="PopulateMap">
+            <cc:steps>
+                <cc:eval id="Eval"><cc:expression>props['report.hash.key.value'] = parts[0].xpath('/rp:Report_Entry/rp:Employee/rp:Employee_ID')</cc:expression><cc:expression>props['report.hash.map'].put(props['report.hash.key.value'], parts[0].text)</cc:expression></cc:eval>
+            </cc:steps>
+        </cc:async-mediation>
+	</cc:assembly>
+
+</beans>
